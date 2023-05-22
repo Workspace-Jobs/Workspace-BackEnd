@@ -60,7 +60,7 @@ class ResumeDetail(APIView):
                 }, status=status.HTTP_204_NO_CONTENT)
             return Response({
                 "message": "사용자가 다릅니다."
-            }, status=status.HTTP_204_NO_CONTENT)
+            }, status=status.HTTP_400_BAD_REQUEST)
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
@@ -100,5 +100,28 @@ class NBDetail(APIView):
         except Exception:
             return Response({
                 "message": "pk가 없습니다."
-            },status=status.HTTP_400_BAD_REQUEST)
-        
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            NB_O = NOTICE_BOARD.objects.get(pk=pk)
+            if user == NB_O.user:
+                serializer = NBDetailSerializers(NB_O, data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response({
+                        "message": "게시물이 수정됐습니다."
+                    }, status=status.HTTP_200_OK)
+                return Response({
+                    "message": "잘못된 요청입니다."
+                }, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "message": "사용자가 다릅니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

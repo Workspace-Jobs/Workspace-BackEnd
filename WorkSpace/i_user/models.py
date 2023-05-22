@@ -14,9 +14,8 @@ class USERManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username=None ,email=None, password=None, **extra_fields):
+    def create_superuser(self, email=None, password=None, **extra_fields):
         superuser = self.create_user(
-            username=username,
             email=email,
             password=password,
         )
@@ -33,7 +32,7 @@ class USERManager(BaseUserManager):
 class USER(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
-    username = models.TextField()
+    username = models.TextField(null=False, blank=False)
     is_staff = models.BooleanField(default=False)
     is_company = models.BooleanField(default=False)
     location = models.TextField(null=False, blank=False)
@@ -45,6 +44,8 @@ class USER(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = USERManager()
+
+    USERNAME_FIELD = 'email'
 
 
 class RESUME(models.Model):

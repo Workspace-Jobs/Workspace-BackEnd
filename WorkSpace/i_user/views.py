@@ -11,6 +11,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken
 
 from .models import *
 from .serializers import *
+from .filter import *
 
 
 def verify_jwt(token):
@@ -63,3 +64,4 @@ class ResumeDetail(APIView):
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+

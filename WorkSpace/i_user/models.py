@@ -1,5 +1,33 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+
+
+class USERManager(BaseUserManager):
+    def create_user(self, username, email, password, **kwargs):
+        if not email:
+            raise ValueError('Users must have an email address')
+        user = self.model(
+            username=username,
+            email=email,
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username=None ,email=None, password=None, **extra_fields):
+        superuser = self.create_user(
+            username=username,
+            email=email,
+            password=password,
+        )
+
+        superuser.is_company = True
+        superuser.is_staff = True
+        superuser.is_superuser = True
+        superuser.is_active = True
+
+        superuser.save(using=self._db)
+        return superuser
 
 
 class USER(AbstractBaseUser, PermissionsMixin):
@@ -8,13 +36,15 @@ class USER(AbstractBaseUser, PermissionsMixin):
     username = models.TextField()
     is_staff = models.BooleanField(default=False)
     is_company = models.BooleanField(default=False)
-    location = models.TextField()
+    location = models.TextField(null=False, blank=False)
     profile = models.ImageField(upload_to='profile/%Y/%m/%d', default='profile/default.png')
 
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = USERManager()
 
 
 class RESUME(models.Model):

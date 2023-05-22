@@ -89,3 +89,16 @@ class NB(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class NBDetail(APIView):
+    serializer_class = NBDetailSerializers
+
+    def get(self, request, pk):
+        try:
+            NB_O = NOTICE_BOARD.objects.get(pk=pk)
+            serializer = NBDetailSerializers(NB_O)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception:
+            return Response({
+                "message": "pk가 없습니다."
+            },status=status.HTTP_400_BAD_REQUEST)
+        

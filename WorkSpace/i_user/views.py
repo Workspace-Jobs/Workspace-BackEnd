@@ -144,3 +144,23 @@ class NBDetail(APIView):
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Good(APIView):
+    def get(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            NB_O = NOTICE_BOARD.objects.get(pk=pk)
+            good = GOOD()
+            good.user = user
+            good.nb = NB_O
+            good.save()
+            return Response({
+                "message": "좋아요가 추과 됐습니다."
+            }, status=status.HTTP_200_OK)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

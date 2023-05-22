@@ -12,4 +12,5 @@ urlpatterns = [
 
     path('NB/', NB.as_view()),
     path('NB/<int:pk>', NBDetail.as_view()),
+    path('NB/good/<int:pk>', Good.as_view()),
 ]

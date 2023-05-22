@@ -125,3 +125,22 @@ class NBDetail(APIView):
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            NB_O = NOTICE_BOARD.objects.get(pk=pk)
+            if NB_O.user == user:
+                NB_O.delete()
+                return Response({
+                    "message": "삭제되었습니다."
+                }, status=status.HTTP_204_NO_CONTENT)
+            return Response({
+                "message": "사용자가 다릅니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

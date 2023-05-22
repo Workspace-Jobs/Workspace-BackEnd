@@ -10,10 +10,16 @@ class ResumeSerializers(serializers.ModelSerializer):
 
 
 class NBDetailSerializers(serializers.ModelSerializer):
+    good_cnt = serializers.SerializerMethodField()
+
     class Meta:
         model = NOTICE_BOARD
-        fields = ['id', 'user', 'title', 'centent', 'tag', 'created_date', 'updated_data']
-        read_only_fields = ['id', 'user', 'created_date', 'updated_data']
+        fields = ['id', 'user', 'title', 'centent', 'tag', 'good_cnt', 'created_date', 'updated_data']
+        read_only_fields = ['id', 'user', 'good_cnt', 'created_date', 'updated_data']
+
+    def get_good_cnt(self, obj):
+        O_list = GOOD.objects.filter(nb=obj)
+        return len(O_list)
 
 
 class NBListSerializers(serializers.ModelSerializer):

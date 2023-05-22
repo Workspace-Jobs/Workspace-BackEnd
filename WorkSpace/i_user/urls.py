@@ -10,4 +10,6 @@ urlpatterns = [
 
     path('user/resume/', Resume.as_view()),
     path('user/resume/<int:pk>', ResumeDetail.as_view()),
+
+    path('NB/',NB.as_view())
 ]

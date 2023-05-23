@@ -154,13 +154,20 @@ class Good(APIView):
             decoded_payload = decoded_token.payload
             user = USER.objects.get(pk=decoded_payload["user_id"])
             NB_O = NOTICE_BOARD.objects.get(pk=pk)
-            good = GOOD()
-            good.user = user
-            good.nb = NB_O
-            good.save()
-            return Response({
-                "message": "좋아요가 추과 됐습니다."
-            }, status=status.HTTP_200_OK)
+            try:
+                good = GOOD.objects.get(user=user, nb=NB_O)
+                good.delete()
+                return Response({
+                    "message": "좋아요가 삭제 됐습니다."
+                }, status=status.HTTP_204_NO_CONTENT)
+            except Exception:
+                good = GOOD()
+                good.user = user
+                good.nb = NB_O
+                good.save()
+                return Response({
+                    "message": "좋아요가 추과 됐습니다."
+                }, status=status.HTTP_204_NO_CONTENT)
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)

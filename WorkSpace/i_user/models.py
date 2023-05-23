@@ -98,6 +98,8 @@ class SUPPORT(models.Model):
     employment = models.ForeignKey('EMPLOYMENT', on_delete=models.CASCADE)
     resume = models.ForeignKey('RESUME', on_delete=models.CASCADE)
     state = models.TextField()
+    phone = models.TextField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
 
 
 class MARK(models.Model):

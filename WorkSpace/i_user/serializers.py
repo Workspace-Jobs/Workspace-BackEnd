@@ -51,17 +51,10 @@ class COMMENTSerializers(serializers.ModelSerializer):
         return user.username
 
 
-class EMPLOYMENTDetailSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = EMPLOYMENT
-        fields = ['id', 'title', 'img1', 'img2', 'img3', 'centent', 'user', 'date', 'B_job', 'job']
-        read_only_fields = ['id', 'user']
-
-
 class EMPLOYMENTListByUSerSerializers(serializers.ModelSerializer):
     class Meta:
         model = USER
-        fields = ['username', 'location']
+        fields = ['id', 'username', 'location']
 
 
 class EMPLOYMENTListSerializers(serializers.ModelSerializer):
@@ -80,5 +73,20 @@ class EMPLOYMENTListSerializers(serializers.ModelSerializer):
             day = obj.date - date.today()
             if day.days == 0:
                 return "D-day"
-            return "D-"+str(day.days)
+            return "D-" + str(day.days)
 
+
+class EMPLOYMENTDetailSerializers(serializers.ModelSerializer):
+    user = EMPLOYMENTListByUSerSerializers()
+    date = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EMPLOYMENT
+        fields = ['id', 'title', 'img1', 'img2', 'img3', 'centent', 'user', 'date', 'B_job', 'job']
+        read_only_fields = ['id', 'user']
+
+    def get_date(self, obj):
+        if obj.date == date(9999, 12, 30):
+            return "상시"
+        else:
+            return obj.date

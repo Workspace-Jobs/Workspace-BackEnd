@@ -20,6 +20,7 @@ urlpatterns = [
     path('EM/', EMPLOYMENTList.as_view()),
     path('EM/job/', EMPLOYMENTJobList.as_view()),
     path('EM/search/', EMPLOYMENTSearchList.as_view()),
+    path('EM/<int:pk>', EMPLOYMENTDetail.as_view()),
 
 
 ]

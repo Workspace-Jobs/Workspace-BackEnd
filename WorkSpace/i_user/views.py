@@ -287,8 +287,23 @@ class EMPLOYMENTSearchList(APIView):
     def get(self, request):
         search = request.query_params['search']
         EM_O = EMPLOYMENT.objects.filter(
-            Q(title__contains=search) | Q(job__contains=search) | Q(user__username__contains=search) | Q(date__gte=date.today())).order_by('-id')
+            Q(title__contains=search) | Q(job__contains=search) | Q(user__username__contains=search) | Q(
+                date__gte=date.today())).order_by('-id')
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(EM_O, request)
         serializer = EMPLOYMENTListSerializers(result_page, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class EMPLOYMENTDetail(APIView):
+    serializer_class = EMPLOYMENTDetailSerializers
+
+    def get(self, request, pk):
+        try:
+            EM_O = EMPLOYMENT.objects.get(pk=pk)
+            serializer = EMPLOYMENTDetailSerializers(EM_O)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception:
+            return Response({
+                "message": "채용 공고가 없습니다."
+            })

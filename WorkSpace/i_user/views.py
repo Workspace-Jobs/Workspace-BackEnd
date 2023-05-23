@@ -307,3 +307,30 @@ class EMPLOYMENTDetail(APIView):
             return Response({
                 "message": "채용 공고가 없습니다."
             })
+
+
+class Mark(APIView):
+    def get(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            EM_O = EMPLOYMENT.objects.get(pk=pk)
+            try:
+                mark = MARK.objects.get(user=user, employment=EM_O)
+                mark.delete()
+                return Response({
+                    "message": "북마트가 삭제 됐습니다."
+                }, status=status.HTTP_204_NO_CONTENT)
+            except Exception:
+                mark = MARK()
+                mark.user = user
+                mark.employment = EM_O
+                mark.save()
+                return Response({
+                    "message": "북마크에 추과 됐습니다."
+                }, status=status.HTTP_204_NO_CONTENT)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

@@ -21,6 +21,6 @@ urlpatterns = [
     path('EM/job/', EMPLOYMENTJobList.as_view()),
     path('EM/search/', EMPLOYMENTSearchList.as_view()),
     path('EM/<int:pk>', EMPLOYMENTDetail.as_view()),
-
+    path('EM/mark/<int:pk>', Mark.as_view()),
 
 ]

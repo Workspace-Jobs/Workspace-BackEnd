@@ -8,7 +8,14 @@ from .models import *
 class ResumeSerializers(serializers.ModelSerializer):
     class Meta:
         model = RESUME
-        fields = ['id', 'user','name', 'resume']
+        fields = ['id', 'user', 'name', 'resume']
+        read_only_fields = ['id', 'user']
+
+
+class ResumeListSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = RESUME
+        fields = ['id', 'user', 'name']
         read_only_fields = ['id', 'user']
 
 

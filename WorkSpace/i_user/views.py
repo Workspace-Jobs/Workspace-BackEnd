@@ -45,8 +45,38 @@ class Resume(APIView):
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            R_list = RESUME.objects.filter(user=user)
+            serializer = ResumeListSerializers(R_list, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ResumeDetail(APIView):
+    def get(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            resume = RESUME.objects.get(pk=pk)
+            if resume.user == user:
+                serializer = ResumeSerializers(resume)
+                return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+            return Response({
+                "message": "사용자가 다릅니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk):
         accessToken = request.META.get('HTTP_AUTHORIZATION')
         if verify_jwt(accessToken):
@@ -336,4 +366,3 @@ class Mark(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-cl

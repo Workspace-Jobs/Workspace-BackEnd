@@ -48,3 +48,25 @@ class COMMENTSerializers(serializers.ModelSerializer):
     def get_user(self, obj):
         user = obj.user
         return user.username
+
+
+class EMPLOYMENTDetailSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = EMPLOYMENT
+        fields = ['id', 'title', 'img1', 'img2', 'img3', 'centent', 'user', 'date', 'B_job', 'job']
+        read_only_fields = ['id', 'user']
+
+
+class EMPLOYMENTListByUSerSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = USER
+        fields = ['username', 'location']
+
+
+class EMPLOYMENTListSerializers(serializers.ModelSerializer):
+    user = EMPLOYMENTListByUSerSerializers()
+
+    class Meta:
+        model = EMPLOYMENT
+        fields = ['id', 'title', 'img1', 'user', 'date']
+        read_only_fields = ['id', 'user']

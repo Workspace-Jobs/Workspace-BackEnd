@@ -8,7 +8,7 @@ from .models import *
 class ResumeSerializers(serializers.ModelSerializer):
     class Meta:
         model = RESUME
-        fields = ['id', 'user', 'resume']
+        fields = ['id', 'user','name', 'resume']
         read_only_fields = ['id', 'user']
 
 
@@ -90,3 +90,12 @@ class EMPLOYMENTDetailSerializers(serializers.ModelSerializer):
             return "상시"
         else:
             return obj.date
+
+
+class SUPPORTSerializers(serializers.ModelSerializer):
+    resume = serializers.IntegerField()
+
+    class Meta:
+        model = SUPPORT
+        fields = ['id', 'resume', 'phone', 'email']
+        read_only_fields = ['id']

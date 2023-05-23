@@ -49,6 +49,7 @@ class USER(AbstractBaseUser, PermissionsMixin):
 
 class RESUME(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.TextField(blank=True, null=True)
     user = models.ForeignKey('USER', on_delete=models.CASCADE)
     resume = models.FileField(upload_to='resume/%Y/%m/%d')
 

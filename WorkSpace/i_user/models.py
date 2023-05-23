@@ -62,6 +62,8 @@ class NOTICE_BOARD(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_data = models.DateTimeField(auto_now=True)
 
+    good_bool = models.BooleanField(default=False)
+
 
 class COMMENT(models.Model):
     id = models.AutoField(primary_key=True)

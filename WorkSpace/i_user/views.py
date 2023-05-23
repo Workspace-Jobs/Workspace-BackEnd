@@ -1,3 +1,4 @@
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.parsers import JSONParser
@@ -89,14 +90,51 @@ class NB(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class NBTag(APIView):
+    serializer_class = NBListSerializers
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 15
+
+    def get(self, request):
+        tag = request.query_params['tag']
+        NB_O = NOTICE_BOARD.objects.filter(tag=tag).order_by('-id')
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(NB_O, request)
+        serializer = NBListSerializers(result_page, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class NBList(APIView):
+    serializer_class = NBListSerializers
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 15
+
+    def get(self, request):
+        NB_O = NOTICE_BOARD.objects.all().order_by('-id')
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(NB_O, request)
+        serializer = NBListSerializers(result_page, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class NBDetail(APIView):
     serializer_class = NBDetailSerializers
 
     def get(self, request, pk):
         try:
             NB_O = NOTICE_BOARD.objects.get(pk=pk)
-            serializer = NBDetailSerializers(NB_O)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = NBDetailSerializers(NB_O, context={'request': request})
+            serializer = serializer.data
+            try:
+                accessToken = request.META.get('HTTP_AUTHORIZATION')
+                decoded_token = AccessToken(accessToken)
+                decoded_payload = decoded_token.payload
+                user = USER.objects.get(pk=decoded_payload["user_id"])
+                good = GOOD.objects.get(user=user, nb=NB_O)
+                serializer['good_bool'] = True
+            except Exception:
+                serializer['good_bool'] = False
+            return Response(serializer, status=status.HTTP_200_OK)
         except Exception:
             return Response({
                 "message": "pk가 없습니다."
@@ -175,12 +213,16 @@ class Good(APIView):
 
 class Comment(APIView):
     serializer_class = COMMENTSerializers
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 15
 
     def get(self, request, pk):
         NB_O = NOTICE_BOARD.objects.get(pk=pk)
         C_list = COMMENT.objects.filter(nb=NB_O).order_by('-id')
-        serializer = COMMENTSerializers(C_list, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(C_list, request)
+        serializer = COMMENTSerializers(result_page, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, pk):
         accessToken = request.META.get('HTTP_AUTHORIZATION')

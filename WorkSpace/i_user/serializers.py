@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import AccessToken
 
 from .models import *
 
@@ -15,8 +16,8 @@ class NBDetailSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = NOTICE_BOARD
-        fields = ['id', 'user', 'title', 'centent', 'tag', 'good_cnt', 'created_date', 'updated_data']
-        read_only_fields = ['id', 'user', 'good_cnt', 'created_date', 'updated_data']
+        fields = ['id', 'user', 'title', 'centent', 'tag', 'good_cnt', 'good_bool', 'created_date', 'updated_data']
+        read_only_fields = ['id', 'user', 'good_cnt', 'good_bool', 'created_date', 'updated_data']
 
     def get_good_cnt(self, obj):
         O_list = GOOD.objects.filter(nb=obj)
@@ -32,12 +33,13 @@ class NBListSerializers(serializers.ModelSerializer):
         read_only_fields = ['id', 'user', 'title', 'good_cnt', 'created_date']
 
     def get_good_cnt(self, obj):
-        O_list = GOOD.objects.filter(NOTICE_BOARD=obj)
-        return len(O_list)
+        G_list = GOOD.objects.filter(nb=obj)
+        return len(G_list)
 
 
 class COMMENTSerializers(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+
     class Meta:
         model = COMMENT
         fields = ['id', 'user', 'nb', 'date', 'centent']

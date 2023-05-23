@@ -74,7 +74,7 @@ class EMPLOYMENTListSerializers(serializers.ModelSerializer):
         read_only_fields = ['id', 'user']
 
     def get_date(self, obj):
-        if obj.date == date(1111, 11, 11):
+        if obj.date == date(9999, 12, 30):
             return "상시"
         else:
             day = obj.date - date.today()

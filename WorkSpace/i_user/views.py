@@ -251,7 +251,7 @@ class EMPLOYMENTList(APIView):
     pagination_class.page_size = 20
 
     def get(self, request):
-        EM_O = EMPLOYMENT.objects.all().order_by('-id')
+        EM_O = EMPLOYMENT.objects.filter(date__gte=date.today()).order_by('-id')
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(EM_O, request)
         serializer = EMPLOYMENTListSerializers(result_page, many=True)
@@ -267,9 +267,9 @@ class EMPLOYMENTJobList(APIView):
         job = request.query_params['job']
         if job in job_list:
             if job == "개발 전체":
-                EM_O = EMPLOYMENT.objects.all().order_by('-id')
+                EM_O = EMPLOYMENT.objects.filter(date__gte=date.today()).order_by('-id')
             else:
-                EM_O = EMPLOYMENT.objects.filter(job=job).order_by('-id')
+                EM_O = EMPLOYMENT.objects.filter(Q(job=job) | Q(date__gte=date.today())).order_by('-id')
             paginator = self.pagination_class()
             result_page = paginator.paginate_queryset(EM_O, request)
             serializer = EMPLOYMENTListSerializers(result_page, many=True)
@@ -277,3 +277,18 @@ class EMPLOYMENTJobList(APIView):
         return Response({
             "message": "아직 분류되지 않은 직종입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EMPLOYMENTSearchList(APIView):
+    serializer_class = EMPLOYMENTListSerializers
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 20
+
+    def get(self, request):
+        search = request.query_params['search']
+        EM_O = EMPLOYMENT.objects.filter(
+            Q(title__contains=search) | Q(job__contains=search) | Q(user__username__contains=search) | Q(date__gte=date.today())).order_by('-id')
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(EM_O, request)
+        serializer = EMPLOYMENTListSerializers(result_page, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

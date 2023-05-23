@@ -17,5 +17,6 @@ urlpatterns = [
     path('NB/good/<int:pk>', Good.as_view()),
     path('NB/comment/<int:pk>', Comment.as_view()),
 
-    path('EM/',EMPLOYMENTList.as_view())
+    path('EM/',EMPLOYMENTList.as_view()),
+    path('EM/job/',EMPLOYMENTJobList.as_view())
 ]

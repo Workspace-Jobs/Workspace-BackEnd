@@ -244,3 +244,15 @@ class Comment(APIView):
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
 
+
+class EMPLOYMENTList(APIView):
+    serializer_class = EMPLOYMENTListSerializers
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 20
+
+    def get(self, request):
+        EM_O = EMPLOYMENT.objects.all().order_by('-id')
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(EM_O, request)
+        serializer = EMPLOYMENTListSerializers(result_page, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import *
 
 
@@ -33,3 +34,15 @@ class NBListSerializers(serializers.ModelSerializer):
     def get_good_cnt(self, obj):
         O_list = GOOD.objects.filter(NOTICE_BOARD=obj)
         return len(O_list)
+
+
+class COMMENTSerializers(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    class Meta:
+        model = COMMENT
+        fields = ['id', 'user', 'nb', 'date', 'centent']
+        read_only_fields = ['id', 'user', 'nb', 'date']
+
+    def get_user(self, obj):
+        user = obj.user
+        return user.username

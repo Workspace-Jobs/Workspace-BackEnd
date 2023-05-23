@@ -171,3 +171,33 @@ class Good(APIView):
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Comment(APIView):
+    serializer_class = COMMENTSerializers
+
+    def get(self, request, pk):
+        NB_O = NOTICE_BOARD.objects.get(pk=pk)
+        C_list = COMMENT.objects.filter(nb=NB_O).order_by('-id')
+        serializer = COMMENTSerializers(C_list, many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def post(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            NB_O = NOTICE_BOARD.objects.get(pk=pk)
+            serializer = COMMENTSerializers(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user=user, nb=NB_O)
+                return Response({
+                    "message": "댓글이 추과 됐습니다."
+                }, status=status.HTTP_204_NO_CONTENT)
+            return Response({
+                "message": "잘못된 요청입니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

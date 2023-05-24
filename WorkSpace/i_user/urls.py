@@ -6,6 +6,8 @@ from .views import *
 
 
 urlpatterns = [
+    path('',index),
+
     path('user/', include('dj_rest_auth.urls')),
     path('user/registration/', include('dj_rest_auth.registration.urls')),
     re_path(r'^account-confirm-email/$', VerifyEmailView.as_view(), name='account_email_verification_sent'),

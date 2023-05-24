@@ -37,7 +37,7 @@ class USERManager(BaseUserManager):
 class USER(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
-    username = models.TextField()
+    username = models.TextField(unique=False)
     is_staff = models.BooleanField(default=False)
     is_company = models.BooleanField(default=False)
     location = models.TextField(null=False, blank=False)
@@ -107,7 +107,7 @@ class SUPPORT(models.Model):
     user = models.ForeignKey('USER', on_delete=models.CASCADE)
     employment = models.ForeignKey('EMPLOYMENT', on_delete=models.CASCADE)
     resume = models.ForeignKey('RESUME', on_delete=models.CASCADE)
-    state = models.TextField()
+    state = models.TextField(blank=True, null=True)
     phone = models.TextField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     date = models.DateField(auto_now_add=True, blank=True, null=True)

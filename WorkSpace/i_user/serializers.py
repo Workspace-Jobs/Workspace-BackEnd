@@ -132,3 +132,9 @@ class MyPageGoodSerializers(serializers.ModelSerializer):
         model = GOOD
         fields = ['id', 'nb']
         read_only_fields = ['id', 'nb']
+
+
+class UserProfileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = USER
+        fields = ['profile']

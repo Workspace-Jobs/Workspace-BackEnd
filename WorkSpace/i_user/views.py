@@ -483,3 +483,40 @@ class MyPageMyNB(APIView):
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
 
+
+class UserProfile(APIView):
+    serializer_class = UserProfileSerializers
+
+    def post(self, request):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            serializer = UserProfileSerializers(user, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    "message": "이미지가 변경됐습니다."
+                }, status=status.HTTP_200_OK)
+            return Response({
+                "message": "잘못등록 됐습니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            user.profile = 'profile/default.png'
+            user.save()
+            return Response({
+                "message": "프로필이 기본 이미지로 변경됩니다."
+            }, status=status.HTTP_204_NO_CONTENT)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

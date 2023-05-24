@@ -31,5 +31,5 @@ urlpatterns = [
     path('NP/NB/', MyPageMyNB.as_view()),
     path('NP/profile/', UserProfile.as_view()),
     path('NP/state/', StateNum.as_view()),
-
+    path('NP/state/list/', StateList.as_view()),
 ]

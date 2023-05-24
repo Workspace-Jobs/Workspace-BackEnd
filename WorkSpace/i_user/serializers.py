@@ -145,3 +145,21 @@ class UserNameSerializers(serializers.ModelSerializer):
         model = USER
         fields = ['username']
 
+
+class EmploymentMyPageSerializers(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EMPLOYMENT
+        fields = ['id', 'title', 'user']
+
+    def get_user(self, obj):
+        return obj.user.username
+
+
+class SUPPORTListSerializers(serializers.ModelSerializer):
+    employment = EmploymentMyPageSerializers()
+
+    class Meta:
+        model = SUPPORT
+        fields = ['id', 'employment', 'date']

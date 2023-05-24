@@ -123,3 +123,12 @@ class MyPageMarkSerializers(serializers.ModelSerializer):
         model = MARK
         fields = ['id', 'employment']
         read_only_fields = ['id', 'employment']
+
+
+class MyPageGoodSerializers(serializers.ModelSerializer):
+    nb = NBListSerializers()
+
+    class Meta:
+        model = GOOD
+        fields = ['id', 'nb']
+        read_only_fields = ['id', 'nb']

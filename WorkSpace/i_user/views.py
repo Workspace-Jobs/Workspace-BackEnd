@@ -366,3 +366,27 @@ class Mark(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class Support(APIView):
+    serializer_class = SUPPORTSerializers
+
+    def post(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            EM_O = EMPLOYMENT.objects.get(pk=pk)
+            serializer = SUPPORTSerializers(data=request.data)
+            if serializer.is_valid():
+                RE_pk = serializer.validated_data.get('resume')
+                RE = RESUME.objects.get(pk=int(RE_pk))
+                serializer.save(user=user, employment=EM_O, resume=RE, state="서류 접수")
+                return Response({
+                    "message": "서류 접수 됐습니다."
+                })
+            return Response({
+                "message": "잘못된 요청입니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

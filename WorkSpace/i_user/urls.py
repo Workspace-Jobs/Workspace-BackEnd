@@ -26,6 +26,7 @@ urlpatterns = [
 
     path('NP/user/', MyPageUser.as_view()),
     path('NP/mark/', MyPageMark.as_view()),
-    path('NP/good/', MyPageGood.as_view())
+    path('NP/good/', MyPageGood.as_view()),
+    path('NP/NB/', MyPageMyNB.as_view()),
 
 ]

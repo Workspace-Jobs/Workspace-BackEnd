@@ -114,3 +114,12 @@ class USERMyPageSerializers(serializers.ModelSerializer):
         model = USER
         fields = ['id', 'email', 'profile']
         read_only_fields = ['id', 'email', 'profile']
+
+
+class MyPageMarkSerializers(serializers.ModelSerializer):
+    employment = EMPLOYMENTListSerializers()
+
+    class Meta:
+        model = MARK
+        fields = ['id', 'employment']
+        read_only_fields = ['id', 'employment']

@@ -24,6 +24,7 @@ urlpatterns = [
     path('EM/mark/<int:pk>', Mark.as_view()),
     path('EM/su/<int:pk>', Support.as_view()),
 
-    path('NP/user/', MyPageUser.as_view())
+    path('NP/user/', MyPageUser.as_view()),
+    path('NP/mark/', MyPageMark.as_view())
 
 ]

@@ -416,3 +416,27 @@ class MyPageUser(APIView):
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MyPageMark(APIView):
+    serializer_class = MyPageMarkSerializers
+
+    def get(self, request):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            try:
+                user = USER.objects.get(pk=decoded_payload["user_id"])
+            except Exception:
+                return Response({
+                    "message": "사용자가 없습니다."
+                }, status=status.HTTP_400_BAD_REQUEST)
+            mark = MARK.objects.filter(user=user).order_by("-id")
+            serializer = MyPageMarkSerializers(mark, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+

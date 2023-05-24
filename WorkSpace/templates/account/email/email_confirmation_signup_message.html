@@ -1,0 +1,47 @@
+{% load account %}
+{% load i18n %}
+{% block content %}
+{% autoescape off %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+
+<!DOCTYPE html>
+<html lang="ko">
+  <body>
+    <div style="
+        width: 450px;
+        border: 1px solid #000000;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+      "
+    >
+      <h1>회원가입 이메일 인증</h1>
+      <p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>
+
+      <a
+        href="{{ activate_url }}"
+        target="_blank"
+        style="
+          width: 150px;
+          height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: #6f7aec;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          text-decoration: none;
+          color: white;
+        "
+        >이메일 인증 확인</a>
+    </div>
+  </body>
+</html>
+
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock %}

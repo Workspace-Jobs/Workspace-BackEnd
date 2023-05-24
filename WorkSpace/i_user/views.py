@@ -582,3 +582,41 @@ class StateList(APIView):
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SupportDetail(APIView):
+    def get(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            support = SUPPORT.objects.get(pk=pk)
+            if user == support.user:
+                serializer = SUPPORTDetailSerializers(support)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({
+                "message": "유저가 다릅니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            support = SUPPORT.objects.get(pk=pk)
+            if user == support.user:
+                support.delete()
+                return Response({
+                    "message": "지원이 취소됐습니다."
+                }, status=status.HTTP_204_NO_CONTENT)
+            return Response({
+                "message": "유저가 다릅니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

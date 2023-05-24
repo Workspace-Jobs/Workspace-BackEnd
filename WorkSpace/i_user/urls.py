@@ -32,4 +32,5 @@ urlpatterns = [
     path('NP/profile/', UserProfile.as_view()),
     path('NP/state/', StateNum.as_view()),
     path('NP/state/list/', StateList.as_view()),
+    path('NP/support/<int:pk>', SupportDetail.as_view()),
 ]

@@ -163,3 +163,34 @@ class SUPPORTListSerializers(serializers.ModelSerializer):
     class Meta:
         model = SUPPORT
         fields = ['id', 'employment', 'date']
+
+
+class EmploymentMyPageDetailSerializers(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EMPLOYMENT
+        fields = ['id', 'title', 'user']
+
+    def get_user(self, obj):
+        return obj.user.username
+
+
+class ResumeBySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = RESUME
+        fields = ['id', 'name', 'resume']
+        read_only_fields = ['id']
+
+
+class SUPPORTDetailSerializers(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    employment = EmploymentMyPageSerializers()
+    resume = ResumeBySerializers()
+
+    class Meta:
+        model = SUPPORT
+        fields = ['id', 'user', 'employment', 'resume', 'email', 'phone']
+
+    def get_user(self, obj):
+        return obj.user.username

@@ -331,8 +331,18 @@ class EMPLOYMENTDetail(APIView):
     def get(self, request, pk):
         try:
             EM_O = EMPLOYMENT.objects.get(pk=pk)
-            serializer = EMPLOYMENTDetailSerializers(EM_O)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                accessToken = request.META.get('HTTP_AUTHORIZATION')
+                decoded_token = AccessToken(accessToken)
+                decoded_payload = decoded_token.payload
+                user = USER.objects.get(pk=decoded_payload["user_id"])
+                bools = SUPPORT.objects.get(employment=EM_O, user=user)
+                EM_O.support_bool = True
+            except Exception:
+                EM_O.support_bool = False
+            finally:
+                serializer = EMPLOYMENTDetailSerializers(EM_O)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception:
             return Response({
                 "message": "채용 공고가 없습니다."

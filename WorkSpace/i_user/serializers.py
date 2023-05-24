@@ -86,10 +86,11 @@ class EMPLOYMENTListSerializers(serializers.ModelSerializer):
 class EMPLOYMENTDetailSerializers(serializers.ModelSerializer):
     user = EMPLOYMENTListByUSerSerializers()
     date = serializers.SerializerMethodField()
+    support_bool = serializers.BooleanField()
 
     class Meta:
         model = EMPLOYMENT
-        fields = ['id', 'title', 'img1', 'img2', 'img3', 'centent', 'user', 'date', 'B_job', 'job']
+        fields = ['id', 'title', 'img1', 'img2', 'img3', 'centent', 'support_bool', 'user', 'date', 'B_job', 'job']
         read_only_fields = ['id', 'user']
 
     def get_date(self, obj):

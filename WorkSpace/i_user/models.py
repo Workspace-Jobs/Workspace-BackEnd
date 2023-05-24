@@ -92,6 +92,8 @@ class EMPLOYMENT(models.Model):
     B_job = models.TextField()
     job = models.TextField()
 
+    support_bool = models.BooleanField(blank=True, null=True)
+
 
 class SUPPORT(models.Model):
     id = models.AutoField(primary_key=True)

@@ -30,5 +30,6 @@ urlpatterns = [
     path('NP/good/', MyPageGood.as_view()),
     path('NP/NB/', MyPageMyNB.as_view()),
     path('NP/profile/', UserProfile.as_view()),
+    path('NP/state/', StateNum.as_view()),
 
 ]

@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
+from collections import Counter
 
 from .models import *
 from .serializers import *
@@ -543,3 +544,22 @@ class UserName(APIView):
         return Response({
             "message": "유효하지 않은 토큰입니다."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StateNum(APIView):
+    def get(self, request):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            data_1 = SUPPORT.objects.filter(user=user, state="지원 완료")
+            data_2 = SUPPORT.objects.filter(user=user, state="서류 통과")
+            data_3 = SUPPORT.objects.filter(user=user, state="최종 합격")
+            data_4 = SUPPORT.objects.filter(user=user, state="불합격")
+            return Response({
+                "지원 완료": len(data_1),
+                "서류 통과": len(data_2),
+                "최종 합격": len(data_3),
+                "불합격": len(data_4)
+            })

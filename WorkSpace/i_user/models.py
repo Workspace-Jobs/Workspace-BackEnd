@@ -103,6 +103,7 @@ class SUPPORT(models.Model):
     state = models.TextField()
     phone = models.TextField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
 
 
 class MARK(models.Model):

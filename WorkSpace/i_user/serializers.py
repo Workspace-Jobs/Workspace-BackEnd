@@ -138,3 +138,10 @@ class UserProfileSerializers(serializers.ModelSerializer):
     class Meta:
         model = USER
         fields = ['profile']
+
+
+class UserNameSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = USER
+        fields = ['username']
+

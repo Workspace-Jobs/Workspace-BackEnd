@@ -6,6 +6,7 @@ from .views import *
 urlpatterns = [
     path('user/', include('dj_rest_auth.urls')),
     path('user/registration/', include('dj_rest_auth.registration.urls')),
+    path('user/name/', UserName.as_view()),
 
     path('user/resume/', Resume.as_view()),
     path('user/resume/<int:pk>', ResumeDetail.as_view()),

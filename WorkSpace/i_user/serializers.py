@@ -107,3 +107,10 @@ class SUPPORTSerializers(serializers.ModelSerializer):
         model = SUPPORT
         fields = ['id', 'resume', 'phone', 'email']
         read_only_fields = ['id']
+
+
+class USERMyPageSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = USER
+        fields = ['id', 'email', 'profile']
+        read_only_fields = ['id', 'email', 'profile']

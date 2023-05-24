@@ -22,6 +22,8 @@ urlpatterns = [
     path('EM/search/', EMPLOYMENTSearchList.as_view()),
     path('EM/<int:pk>', EMPLOYMENTDetail.as_view()),
     path('EM/mark/<int:pk>', Mark.as_view()),
-    path('EM/su/<int:pk>', Support.as_view())
+    path('EM/su/<int:pk>', Support.as_view()),
+
+    path('NP/user/', MyPageUser.as_view())
 
 ]

@@ -3,10 +3,12 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 
 class USERManager(BaseUserManager):
-    def create_user(self, email, password, **kwargs):
+    def create_user(self, email, password, username, **kwargs):
         if not email:
             raise ValueError('Users must have an email address')
+
         user = self.model(
+            username=username,
             email=email,
         )
         user.set_password(password)
@@ -18,6 +20,10 @@ class USERManager(BaseUserManager):
             email=email,
             password=password,
         )
+
+        username = extra_fields.get('username')
+        if username:
+            superuser.username = username
 
         superuser.is_company = True
         superuser.is_staff = True
@@ -31,7 +37,7 @@ class USERManager(BaseUserManager):
 class USER(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
-    username = models.TextField(null=False, blank=False)
+    username = models.TextField()
     is_staff = models.BooleanField(default=False)
     is_company = models.BooleanField(default=False)
     location = models.TextField(null=False, blank=False)
@@ -45,6 +51,7 @@ class USER(AbstractBaseUser, PermissionsMixin):
     objects = USERManager()
 
     USERNAME_FIELD = 'email'
+    EMAIL_FIELD = 'email'
 
 
 class RESUME(models.Model):

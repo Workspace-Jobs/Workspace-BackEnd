@@ -632,7 +632,7 @@ class ConfirmEmailView(APIView):
     def get(self, *args, **kwargs):
         self.object = confirmation = self.get_object()
         confirmation.confirm(self.request)
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('http://localhost:3000/home')
 
     def get_object(self, queryset=None):
         key = self.kwargs['key']
@@ -643,7 +643,7 @@ class ConfirmEmailView(APIView):
             try:
                 email_confirmation = queryset.get(key=key.lower())
             except EmailConfirmation.DoesNotExist:
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('http://localhost:3000/home')
         return email_confirmation
 
     def get_queryset(self):

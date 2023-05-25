@@ -180,9 +180,19 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
+# REST_AUTH = {
+#     'USE_JWT': True,
+#     'JWT_AUTH_HTTPONLY': False,
+# 'JWT_AUTH_COOKIE' : 'access'
+# }
+
 REST_AUTH = {
     'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'access',
     'JWT_AUTH_HTTPONLY': False,
+    'JWT_AUTH_REFRESH_COOKIE': "refresh_token",
+    'JWT_AUTH_COOKIE_USE_CSRF': True,
+    'SESSION_LOGIN': False
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

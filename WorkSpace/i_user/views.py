@@ -1,16 +1,11 @@
 from django.shortcuts import render
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework import status, viewsets
-from rest_framework.parsers import JSONParser
+from rest_framework import status
 from django.db.models import Q
-from datetime import date, timedelta
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
-from collections import Counter
 from django.http import HttpResponseRedirect
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -655,3 +650,17 @@ class ConfirmEmailView(APIView):
 
 def index(request):
     return render(request, 'index.html')
+
+
+class UserMain(APIView):
+    def get(self, request, ):
+        accessToken = request.META.get('HTTP_AUTHORIZATION')
+        if verify_jwt(accessToken):
+            decoded_token = AccessToken(accessToken)
+            decoded_payload = decoded_token.payload
+            user = USER.objects.get(pk=decoded_payload["user_id"])
+            serializer = UserMainSerializers(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            "message": "유효하지 않은 토큰입니다."
+        }, status=status.HTTP_400_BAD_REQUEST)

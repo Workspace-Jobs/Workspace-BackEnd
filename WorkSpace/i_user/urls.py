@@ -4,15 +4,15 @@ from dj_rest_auth.registration.views import VerifyEmailView
 
 from .views import *
 
-
 urlpatterns = [
-    path('',index),
+    path('', index),
 
     path('user/', include('dj_rest_auth.urls')),
     path('user/registration/', include('dj_rest_auth.registration.urls')),
     re_path(r'^account-confirm-email/$', VerifyEmailView.as_view(), name='account_email_verification_sent'),
     re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', ConfirmEmailView.as_view(), name='account_confirm_email'),
     path('user/name/', UserName.as_view()),
+    path('user/main/', UserMain.as_view()),
 
     path('user/resume/', Resume.as_view()),
     path('user/resume/<int:pk>', ResumeDetail.as_view()),

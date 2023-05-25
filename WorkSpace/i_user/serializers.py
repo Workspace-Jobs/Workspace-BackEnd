@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from datetime import date
-from rest_framework_simplejwt.tokens import AccessToken
 
 from .models import *
 
@@ -144,6 +143,12 @@ class UserNameSerializers(serializers.ModelSerializer):
     class Meta:
         model = USER
         fields = ['username']
+
+
+class UserMainSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = USER
+        fields = ['username', 'profile']
 
 
 class EmploymentMyPageSerializers(serializers.ModelSerializer):

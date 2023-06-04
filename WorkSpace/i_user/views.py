@@ -653,7 +653,7 @@ def index(request):
 
 
 class UserMain(APIView):
-    def get(self, request, ):
+    def get(self, request):
         accessToken = request.META.get('HTTP_AUTHORIZATION')
         if verify_jwt(accessToken):
             decoded_token = AccessToken(accessToken)

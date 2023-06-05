@@ -111,7 +111,7 @@ class SUPPORTSerializers(serializers.ModelSerializer):
 class USERMyPageSerializers(serializers.ModelSerializer):
     class Meta:
         model = USER
-        fields = ['id', 'email', 'profile']
+        fields = ['id', 'email', 'profile', 'username']
         read_only_fields = ['id', 'email', 'profile']
 
 

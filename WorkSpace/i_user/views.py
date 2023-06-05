@@ -318,7 +318,7 @@ class EMPLOYMENTSearchList(APIView):
     def get(self, request):
         search = request.query_params['search']
         EM_O = EMPLOYMENT.objects.filter(
-            Q(title__contains=search) | Q(job__contains=search) | Q(user__username__contains=search) | Q(
+            Q(title__contains=search) | Q(job__contains=search) | Q(user__username__contains=search) and Q(
                 date__gte=date.today())).order_by('-id')
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(EM_O, request)
